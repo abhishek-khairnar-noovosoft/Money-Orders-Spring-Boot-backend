@@ -19,14 +19,14 @@ class UserController @Autowired constructor(private val userService: UserService
         return userDetails
     }
 
-    @GetMapping("/transactions")
-    fun getUserSpecificTransactions(@AuthenticationPrincipal userDetails: UserDetails) : Iterable<Transaction>?{
-        return transactionService.getUserSpecificTransactions(userDetails.username)
-    }
-
-    @PostMapping("/transactions")
-    fun getTransactions(@RequestBody email : String):Iterable<Transaction> {
-        return transactionService.getUserSpecificTransactions(email)
-    }
+//    @GetMapping("/transactions")
+//    fun getUserSpecificTransactions(@AuthenticationPrincipal userDetails: UserDetails) : Iterable<Transaction>?{
+//        return transactionService.getUserSpecificTransactions(userDetails.username)
+//    }
+//
+//    @PostMapping("/transactions")
+//    fun getTransactions(@RequestBody email : String):Iterable<Transaction> {
+//        return transactionService.getUserSpecificTransactions(email)
+//    }
 
 }

@@ -1,9 +1,9 @@
 package com.example.moneyorders.services
 
-import com.example.moneyorders.models.Deposit
+import com.example.moneyorders.models.TransactionsViewModel.DepositViewModel
+import com.example.moneyorders.models.TransactionsViewModel.WithdrawViewModel
+import com.example.moneyorders.models.TransactionsViewModel.TransferViewModel
 import com.example.moneyorders.repositories.TransactionRepository
-import com.example.moneyorders.models.Transfer
-import com.example.moneyorders.models.Withdraw
 import com.example.moneyorders.entities.Transaction
 import com.example.moneyorders.entities.UserEntity
 import com.example.moneyorders.exceptions.CustomExceptions.*
@@ -20,23 +20,15 @@ class TransactionService(
         val userRepository: UserRepository
 ) {
 
-
-    fun getUserSpecificTransactions( email : String) : Iterable<Transaction>{
-        val user = userRepository.findByEmail(email)
-        if (user != null) {
-            return transactionRepository.getTransactionsOfUserWith(user.id)
-        }else{
-            println("No user found with email : $email")
-        }
-        return listOf()
+    fun getAllUsers(): Iterable<UserEntity> {
+        return userRepository.findAll()
     }
-    fun getAllUsers(): Iterable<UserEntity> =
-            userRepository.findAll()
 
-    fun getAllTransactions(): Iterable<Transaction> =
-            transactionRepository.findAll()
+    fun getAllTransactions(): Iterable<Transaction> {
+        return transactionRepository.findAll()
+    }
 
-    fun deposit(transaction: Deposit): Transaction {
+    fun deposit(transaction: DepositViewModel): Transaction {
         if (transaction.transactionAmount <= BigInteger.ZERO)
             throw InvalidAmountException("transaction amount cannot be zero")
 
@@ -58,7 +50,7 @@ class TransactionService(
         return transactionModel
     }
 
-    fun withdraw(transaction: Withdraw): Transaction {
+    fun withdraw(transaction: WithdrawViewModel): Transaction {
         println(transaction.transactionAmount)
         if (transaction.transactionAmount <= BigInteger.ZERO)
             throw InvalidAmountException("transaction amount cannot be zero")
@@ -84,7 +76,7 @@ class TransactionService(
         return transactionModel
     }
 
-    fun transfer(transaction: Transfer): Transaction {
+    fun transfer(transaction: TransferViewModel): Transaction {
         if (transaction.transactionAmount <= BigInteger.ZERO)
             throw InvalidAmountException("transaction amount cannot be zero")
 

@@ -2,9 +2,9 @@ package com.example.moneyorders.controllers
 
 import com.example.moneyorders.entities.Transaction
 import com.example.moneyorders.entities.UserEntity
-import com.example.moneyorders.models.Deposit
-import com.example.moneyorders.models.Transfer
-import com.example.moneyorders.models.Withdraw
+import com.example.moneyorders.models.TransactionsViewModel.DepositViewModel
+import com.example.moneyorders.models.TransactionsViewModel.WithdrawViewModel
+import com.example.moneyorders.models.TransactionsViewModel.TransferViewModel
 import com.example.moneyorders.services.TransactionService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
@@ -20,30 +20,30 @@ class ManagerController @Autowired constructor(private val transactionService: T
     fun home(): String =
             "Home"
 
-
     @GetMapping("/AllTransactions")
     fun getAllTransactions(): Iterable<Transaction> {
         return transactionService.getAllTransactions()
     }
 
     @GetMapping("/users")
-    fun getAllUsers(): Iterable<UserEntity> =
-            transactionService.getAllUsers()
+    fun getAllUsers(): Iterable<UserEntity> {
+        return transactionService.getAllUsers()
+    }
 
     @PostMapping("/deposit")
-    fun depositTransaction(@RequestBody transaction: Deposit): Transaction =
-            transactionService.deposit(transaction)
+    fun depositTransaction(@RequestBody transaction: DepositViewModel): Transaction {
+        return transactionService.deposit(transaction)
+    }
 
     @PostMapping("/withdraw")
-    fun withdrawTransaction(@RequestBody transaction: Withdraw): Transaction =
-            transactionService.withdraw(transaction)
+    fun withdrawTransaction(@RequestBody transaction: WithdrawViewModel): Transaction {
+        return transactionService.withdraw(transaction)
+    }
 
     @PostMapping("/transfer")
-    fun transferTransaction(@RequestBody transaction: Transfer): Transaction =
-            transactionService.transfer(transaction)
-
-
-
+    fun transferTransaction(@RequestBody transaction: TransferViewModel): Transaction {
+        return transactionService.transfer(transaction)
+    }
 }
 
 

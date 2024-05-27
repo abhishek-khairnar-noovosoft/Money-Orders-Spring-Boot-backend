@@ -14,22 +14,22 @@ import java.time.LocalDate
 data class Transaction(
         @Id
 
-        @Column(name = "withdraw_from", nullable = true)
+        @Column(name = "withdraw_from")
         val withdrawFrom: Long? = null,
 
-        @Column(name = "deposited_to", nullable = true)
+        @Column(name = "deposited_to")
         val depositedTo: Long? = null,
 
-        @Column(name = "transaction_amount", nullable = false)
+        @Column(name = "transaction_amount")
         val transactionAmount: BigInteger = BigInteger.ZERO,
 
-        @Column(name = "transaction_type", nullable = false)
+        @Column(name = "transaction_type",)
         val transactionType: String = "",
 
-        @Column(name = "created_at", nullable = false)
+        @Column(name = "created_at")
         val createdAt: Timestamp = Timestamp(System.currentTimeMillis()),
 
-        @Column(name = "status", nullable = false)
+        @Column(name = "status")
         var status: String = "",
 
         @Column(name = "date", nullable = false)

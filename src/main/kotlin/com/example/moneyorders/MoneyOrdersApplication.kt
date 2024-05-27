@@ -1,5 +1,6 @@
 package com.example.moneyorders
 
+import com.example.moneyorders.services.JwtRequestFilter
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
 import org.springframework.boot.runApplication
@@ -11,6 +12,7 @@ import org.springframework.security.config.annotation.web.invoke
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 
 @SpringBootApplication(exclude = [UserDetailsServiceAutoConfiguration::class])
@@ -23,7 +25,9 @@ fun main(args: Array<String>) {
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfig {
+class SecurityConfig(
+        private val jwtRequestFilter: JwtRequestFilter
+) {
 
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
@@ -32,7 +36,7 @@ class SecurityConfig {
                 authorize("/login", permitAll)
                 authorize("/users", hasRole("manager"))
                 authorize("/AllTransactions", hasRole("manager"))
-                authorize("/transactions",permitAll)
+                authorize("/transactions",hasRole("customer"))
                 authorize("/profile",hasRole("customer"))
                 authorize(anyRequest, authenticated)
             }
@@ -40,6 +44,8 @@ class SecurityConfig {
             httpBasic { }
             csrf { disable() }
         }
+
+        http.addFilterBefore(jwtRequestFilter,UsernamePasswordAuthenticationFilter::class.java)
 
         return http.build()
     }
