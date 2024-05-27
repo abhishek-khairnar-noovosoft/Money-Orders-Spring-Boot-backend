@@ -7,3 +7,4 @@ class Transfer(
         val depositTo : Long,
         val transactionAmount : BigInteger
 )
+//ViewModel

@@ -19,6 +19,8 @@ class ManagerController @Autowired constructor(private val transactionService: T
     @GetMapping("/")
     fun home(): String =
             "Home"
+
+
     @GetMapping("/AllTransactions")
     fun getAllTransactions(): Iterable<Transaction> {
         return transactionService.getAllTransactions()
@@ -44,8 +46,14 @@ class ManagerController @Autowired constructor(private val transactionService: T
 
 }
 
+
+
 // remaining apis
 // integrate postgres
 // dockerize
 // JPA library to integrate with database
 // add dependency in gradle
+
+
+//change Models to ViewModels and keep all in one file
+//

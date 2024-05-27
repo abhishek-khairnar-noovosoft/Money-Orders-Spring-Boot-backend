@@ -7,14 +7,14 @@ import java.math.BigInteger
 @Table(name = "users")
 class UserEntity(
         @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
-        val id: Long = 0,
-        val name: String,
-        val email: String,
-        val role: String,
-        val password: String,
-        val balance: BigInteger
-
-) {
-    constructor() : this(0,"","","","",BigInteger.ZERO)
-}
+        @Column(name = "name")
+        val name: String = "",
+        @Column(name = "email")
+        val email: String = "",
+        @Column(name = "role")
+        val role: String = "",
+        @Column(name = "password")
+        val password: String = "",
+        @Column(name = "balance")
+        val balance: BigInteger = BigInteger.ZERO
+)

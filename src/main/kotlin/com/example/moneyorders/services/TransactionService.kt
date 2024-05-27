@@ -21,14 +21,14 @@ class TransactionService(
 ) {
 
 
-    fun getUserSpecificTransactions( email : String) : Iterable<Transaction>?{
+    fun getUserSpecificTransactions( email : String) : Iterable<Transaction>{
         val user = userRepository.findByEmail(email)
         if (user != null) {
             return transactionRepository.getTransactionsOfUserWith(user.id)
         }else{
             println("No user found with email : $email")
         }
-        return null
+        return listOf()
     }
     fun getAllUsers(): Iterable<UserEntity> =
             userRepository.findAll()

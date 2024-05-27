@@ -5,6 +5,7 @@ import jakarta.transaction.Transactional
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
+import org.springframework.http.ResponseEntity
 import java.math.BigInteger
 
 interface UserRepository : JpaRepository<UserEntity, Int> {
@@ -12,6 +13,7 @@ interface UserRepository : JpaRepository<UserEntity, Int> {
         SELECT users.balance FROM users WHERE users.id=:id
     """, nativeQuery = true)
     fun getBalance(id: Long): BigInteger
+
 
     @Transactional
     @Modifying
