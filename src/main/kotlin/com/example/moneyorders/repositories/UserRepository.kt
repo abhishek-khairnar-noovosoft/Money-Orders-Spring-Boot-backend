@@ -14,6 +14,9 @@ interface UserRepository : JpaRepository<UserEntity, Int> {
     """, nativeQuery = true)
     fun getBalance(id: Long): BigInteger
 
+    fun findById(id : Long) : UserEntity
+
+
 
     @Transactional
     @Modifying

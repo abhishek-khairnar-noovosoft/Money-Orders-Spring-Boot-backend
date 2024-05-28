@@ -7,6 +7,8 @@ import java.math.BigInteger
 @Table(name = "users")
 class UserEntity(
         @Id
+        @Column(name = "id")
+        val id: Long = 0,
         @Column(name = "name")
         val name: String = "",
         @Column(name = "email")

@@ -31,22 +31,13 @@ class SecurityConfig(
 
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
-        http {
-            authorizeHttpRequests {
-                authorize("/login", permitAll)
-                authorize("/users", hasRole("manager"))
-                authorize("/AllTransactions", hasRole("manager"))
-                authorize("/transactions",hasRole("customer"))
-                authorize("/profile",hasRole("customer"))
-                authorize(anyRequest, authenticated)
+        http.csrf { it.disable()  }
+        http.invoke {
+            authorizeRequests {
+                authorize("/login",permitAll)
             }
-            formLogin { disable() }
-            httpBasic { }
-            csrf { disable() }
         }
-
         http.addFilterBefore(jwtRequestFilter,UsernamePasswordAuthenticationFilter::class.java)
-
         return http.build()
     }
 

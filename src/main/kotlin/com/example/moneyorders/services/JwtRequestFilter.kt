@@ -1,46 +1,60 @@
 package com.example.moneyorders.services
 
-import io.jsonwebtoken.ExpiredJwtException
+
+import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
+
 @Component
-class JwtRequestFilter (
-        private val userDetailsService : UserService,
-        private val jwtUtil:JwtService
+class JwtRequestFilter(
+        private val userDetailsService: UserService,
+        private val jwtUtil: JwtService,
+        private val objectMapper: ObjectMapper
 ) : OncePerRequestFilter() {
-    override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
-        println("Executing")
+    override fun doFilterInternal(
+            request: HttpServletRequest,
+            response: HttpServletResponse,
+            filterChain: FilterChain,
+    ) {
         val requestTokenHeader = request.getHeader("Authorization")
-        var email:String? = null
-        var jwtToken : String? = null
-        if(requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")){
-            jwtToken = requestTokenHeader.substring(7)
-            try{
-                email = jwtUtil.getUsernameFromToken(jwtToken)
-            }catch (e : IllegalArgumentException){
-                println("Unable to get JWT Token")
-            } catch (e : ExpiredJwtException){
-                println("JWT Token has expired")
-            }
-        } else {
-            println("JWT Token does not begin with Bearer")
-        }
-        if(email != null && SecurityContextHolder.getContext().authentication == null){
-            val userDetails = userDetailsService.loadUserByUsername(email)
-            if(jwtUtil.validateToken(jwtToken!!)){
-                val usernamePasswordAuthenticationToken = UsernamePasswordAuthenticationToken(
-                        userDetails,null,userDetails.authorities
-                )
-                usernamePasswordAuthenticationToken.details = WebAuthenticationDetailsSource().buildDetails(request)
-                SecurityContextHolder.getContext().authentication = usernamePasswordAuthenticationToken
+        if (!request.requestURL.endsWith("/login")) {
+            println("this is login")
+            if (requestTokenHeader == null) {
+                println(request.requestURL)
+                val errorMessage = "Authorization token missing or invalid"
+                val responseBody = mapOf("error" to errorMessage)
+                val responseJson = objectMapper.writeValueAsString(responseBody)
+                val responseEntity = ResponseEntity(responseJson, HttpStatus.UNAUTHORIZED)
+                response.contentType = "application/json"
+                response.writer.write(responseEntity.body.toString())
+                response.status = 401
+                return
             }
         }
-        filterChain.doFilter(request,response)
+
+        if (requestTokenHeader != null) {
+            val jwtToken = requestTokenHeader.substring(7)
+            val email = jwtUtil.getUsernameFromToken(jwtToken)
+            if (SecurityContextHolder.getContext().authentication == null) {
+                val userDetails = userDetailsService.loadUserByUsername(email)
+                if (jwtUtil.validateToken(jwtToken)) {
+                    val usernamePasswordAuthenticationToken = UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.authorities
+                    )
+                    usernamePasswordAuthenticationToken.details = WebAuthenticationDetailsSource().buildDetails(request)
+                    SecurityContextHolder.getContext().authentication = usernamePasswordAuthenticationToken
+                }
+            }
+        }
+        filterChain.doFilter(request, response)
+
     }
 }

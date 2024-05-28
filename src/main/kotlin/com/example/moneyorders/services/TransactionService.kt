@@ -32,7 +32,9 @@ class TransactionService(
         if (transaction.transactionAmount <= BigInteger.ZERO)
             throw InvalidAmountException("transaction amount cannot be zero")
 
-        val balance = userRepository.getBalance(transaction.depositTo)
+//        val balance = userRepository.getBalance(transaction.depositTo)
+        val user = userRepository.findById(transaction.depositTo)
+        val balance = user.balance
         val depositTo = transaction.depositTo
         val transactionAmount = transaction.transactionAmount
         val transactionModel = Transaction(
