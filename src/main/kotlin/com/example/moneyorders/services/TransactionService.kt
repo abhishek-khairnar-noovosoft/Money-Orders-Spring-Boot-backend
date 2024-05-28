@@ -29,10 +29,11 @@ class TransactionService(
     }
 
     fun deposit(transaction: DepositViewModel): Transaction {
+
+
         if (transaction.transactionAmount <= BigInteger.ZERO)
             throw InvalidAmountException("transaction amount cannot be zero")
 
-//        val balance = userRepository.getBalance(transaction.depositTo)
         val user = userRepository.findById(transaction.depositTo)
         val balance = user.balance
         val depositTo = transaction.depositTo
@@ -47,7 +48,9 @@ class TransactionService(
                 date = LocalDate.now()
         )
 
-        userRepository.deposit(balance, transactionAmount, depositTo)
+
+        user.balance += transactionAmount
+        userRepository.save(user)
         transactionRepository.save(transactionModel)
         return transactionModel
     }
@@ -57,7 +60,8 @@ class TransactionService(
         if (transaction.transactionAmount <= BigInteger.ZERO)
             throw InvalidAmountException("transaction amount cannot be zero")
 
-        val balance = userRepository.getBalance(transaction.withdrawFrom)
+        val user = userRepository.findById(transaction.withdrawFrom)
+        val balance = user.balance
         if(balance < transaction.transactionAmount){
             throw IllegalArgumentException("insufficient balance")
         }
@@ -73,7 +77,8 @@ class TransactionService(
                 status = "success",
                 date = LocalDate.now()
         )
-        userRepository.withdraw(balance,transactionAmount,withdrawFrom)
+        user.balance -= transactionAmount
+        userRepository.save(user)
         transactionRepository.save(transactionModel)
         return transactionModel
     }
@@ -82,8 +87,12 @@ class TransactionService(
         if (transaction.transactionAmount <= BigInteger.ZERO)
             throw InvalidAmountException("transaction amount cannot be zero")
 
-        val balance = userRepository.getBalance(transaction.withdrawFrom)
-        if(balance < transaction.transactionAmount){
+        val sender = userRepository.findById(transaction.withdrawFrom)
+        val balanceOfSender = sender.balance
+
+        val receiver = userRepository.findById(transaction.depositTo)
+
+        if(balanceOfSender < transaction.transactionAmount){
             throw IllegalArgumentException("insufficient balance")
         }
         if(transaction.withdrawFrom == transaction.depositTo){
@@ -102,8 +111,12 @@ class TransactionService(
                 status = "success",
                 date = LocalDate.now()
         )
-        userRepository.withdraw(balance, transactionAmount, withdrawFrom)
-        userRepository.deposit(balance, transactionAmount, depositTo)
+
+        sender.balance -= transactionAmount
+        receiver.balance += transactionAmount
+
+        userRepository.save(sender)
+        userRepository.save(receiver)
         transactionRepository.save(transactionModel)
         return transactionModel
     }

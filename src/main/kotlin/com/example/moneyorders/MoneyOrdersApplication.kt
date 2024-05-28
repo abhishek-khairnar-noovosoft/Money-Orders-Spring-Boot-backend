@@ -37,6 +37,7 @@ class SecurityConfig(
                 authorize("/login",permitAll)
             }
         }
+
         http.addFilterBefore(jwtRequestFilter,UsernamePasswordAuthenticationFilter::class.java)
         return http.build()
     }

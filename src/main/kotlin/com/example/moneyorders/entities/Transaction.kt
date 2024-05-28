@@ -1,9 +1,6 @@
 package com.example.moneyorders.entities
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import java.math.BigInteger
 import java.sql.Timestamp
 import java.time.LocalDate
@@ -13,7 +10,8 @@ import java.time.LocalDate
 @Table(name = "transactions")
 data class Transaction(
         @Id
-
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        val id:Long = 0,
         @Column(name = "withdraw_from")
         val withdrawFrom: Long? = null,
 

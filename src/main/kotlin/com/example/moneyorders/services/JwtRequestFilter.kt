@@ -26,9 +26,7 @@ class JwtRequestFilter(
     ) {
         val requestTokenHeader = request.getHeader("Authorization")
         if (!request.requestURL.endsWith("/login")) {
-            println("this is login")
             if (requestTokenHeader == null) {
-                println(request.requestURL)
                 val errorMessage = "Authorization token missing or invalid"
                 val responseBody = mapOf("error" to errorMessage)
                 val responseJson = objectMapper.writeValueAsString(responseBody)

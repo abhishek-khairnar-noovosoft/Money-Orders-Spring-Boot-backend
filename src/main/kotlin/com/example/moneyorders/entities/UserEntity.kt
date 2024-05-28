@@ -18,5 +18,5 @@ class UserEntity(
         @Column(name = "password")
         val password: String = "",
         @Column(name = "balance")
-        val balance: BigInteger = BigInteger.ZERO
+        var balance: BigInteger = BigInteger.ZERO
 )
