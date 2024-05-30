@@ -7,7 +7,13 @@ import java.sql.Timestamp
 import java.time.LocalDateTime
 
 interface TransactionRepository : JpaRepository<Transaction, Int> {
-    fun findAllByStatusOrderByCreatedAtDesc(status: String) : List<Transaction>
+    @Query("""
+        SELECT * FROM transactions t WHERE t.status = 'processing' LIMIT :limit
+    """, nativeQuery = true)
+    fun getNoOfRequiredTransactionsToProcess(limit : Int) : List<Transaction>
+
+    fun findById(id : Long): Transaction
+
     fun findAllByWithdrawFromOrDepositedTo(withdrawFrom: Long, depositedTo: Long) : List<Transaction>
 
 

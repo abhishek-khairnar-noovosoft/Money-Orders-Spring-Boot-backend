@@ -92,13 +92,14 @@ class TransactionService(
         return transactionModel
     }
 
-    fun  getLatestProcessingTransactions() : List<Transaction>{
-        return transactionRepository.findAllByStatusOrderByCreatedAtDesc("processing")
+    fun  getLatestProcessingTransactions(limit : Int) : List<Transaction>{
+        return transactionRepository.getNoOfRequiredTransactionsToProcess(limit)
     }
 
     @Transactional
-    fun processTransaction(transaction : Transaction){
-   
+    fun processTransaction(id : Long){
+        println("processing $id")
+        val transaction = transactionRepository.findById(id)
             when(transaction.transactionType){
                 "deposit" -> {
                     val user = userRepository.findById(transaction.depositedTo)

@@ -28,7 +28,6 @@ class UserController @Autowired constructor(
     fun getUserSpecificTransactions(@RequestHeader("Authorization")authToken : String) : ResponseEntity<List<Transaction>> {
         try {
             val token = authToken.split(" ")[1]
-
             val email = jwtService.getUsernameFromToken(token)
             val user = userService.getUserByEmail(email)
             println(email)
