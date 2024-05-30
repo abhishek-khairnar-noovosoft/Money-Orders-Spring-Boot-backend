@@ -46,15 +46,3 @@ class ManagerController @Autowired constructor(private val transactionService: T
         return ResponseEntity.ok().body(transactionService.transfer(transaction))
     }
 }
-
-
-
-// remaining apis
-// integrate postgres
-// dockerize
-// JPA library to integrate with database
-// add dependency in gradle
-
-
-//change Models to ViewModels and keep all in one file
-//

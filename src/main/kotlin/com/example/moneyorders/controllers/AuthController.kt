@@ -36,11 +36,5 @@ class AuthController @Autowired constructor(
     @DeleteMapping("/logout")
     fun logout(){}
 
-
-
-
-
-
-
 }
 
