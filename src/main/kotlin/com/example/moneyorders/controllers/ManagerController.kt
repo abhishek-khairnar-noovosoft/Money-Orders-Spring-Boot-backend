@@ -5,6 +5,7 @@ import com.example.moneyorders.entities.UserEntity
 import com.example.moneyorders.models.TransactionsViewModel.DepositViewModel
 import com.example.moneyorders.models.TransactionsViewModel.WithdrawViewModel
 import com.example.moneyorders.models.TransactionsViewModel.TransferViewModel
+import com.example.moneyorders.services.JobScheduler
 import com.example.moneyorders.services.TransactionService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -15,11 +16,16 @@ import org.springframework.web.bind.annotation.RestController
 
 
 @RestController
-class ManagerController @Autowired constructor(private val transactionService: TransactionService) {
+class ManagerController @Autowired constructor(
+        private val transactionService: TransactionService
+) {
 
+    val jobScheduler = JobScheduler()
     @GetMapping("/")
-    fun home(): String =
-            "Home"
+    fun home(): String {
+        jobScheduler.scheduleJob(TransactionService.PrintJob("hello world"))
+        return "hello"
+    }
 
     @GetMapping("/AllTransactions")
     fun getAllTransactions(): ResponseEntity<Iterable<Transaction>> {
