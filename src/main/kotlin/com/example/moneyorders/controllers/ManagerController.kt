@@ -1,11 +1,12 @@
 package com.example.moneyorders.controllers
 
+import com.example.moneyorders.entities.JobEntity
 import com.example.moneyorders.entities.Transaction
 import com.example.moneyorders.entities.UserEntity
 import com.example.moneyorders.models.TransactionsViewModel.DepositViewModel
 import com.example.moneyorders.models.TransactionsViewModel.WithdrawViewModel
 import com.example.moneyorders.models.TransactionsViewModel.TransferViewModel
-import com.example.moneyorders.services.JobScheduler
+import com.example.moneyorders.services.JobService
 import com.example.moneyorders.services.TransactionService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -17,13 +18,19 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class ManagerController @Autowired constructor(
-        private val transactionService: TransactionService
+        private val transactionService: TransactionService,
+        private val jobService: JobService
 ) {
 
-    val jobScheduler = JobScheduler()
     @GetMapping("/")
     fun home(): String {
-        jobScheduler.scheduleJob(TransactionService.PrintJob("hello world"))
+        val job = JobEntity(
+                name = "Sample Job",
+                jobType = "PRINT",
+                status = "processing",
+                parameters = mapOf("key1" to "value1", "key2" to "value2")
+        )
+        jobService.saveJob(job)
         return "hello"
     }
 

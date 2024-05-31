@@ -1,7 +1,6 @@
 package com.example.moneyorders
 
 import com.example.moneyorders.filters.JwtRequestFilter
-import com.example.moneyorders.services.JobScheduler
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
 import org.springframework.boot.runApplication

@@ -10,7 +10,6 @@ import java.util.concurrent.Executors
 class TransactionScheduler @Autowired constructor(
         private val transactionService: TransactionService,
 ) {
-
     val workQueue: Queue<Long> = LinkedList()
     val threadPool: ExecutorService = Executors.newFixedThreadPool(3)
     fun fillWorkQueue(transactions: Queue<Long>) {
@@ -21,7 +20,7 @@ class TransactionScheduler @Autowired constructor(
                 break
             }
         }
-        println("workQueue $workQueue")
+//        println("workQueue $workQueue")
         return
     }
 
