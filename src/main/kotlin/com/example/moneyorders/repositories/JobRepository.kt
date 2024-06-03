@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
+import java.util.*
 
 @Repository
 interface JobRepository : JpaRepository<JobEntity,Long>{
@@ -25,5 +26,8 @@ interface JobRepository : JpaRepository<JobEntity,Long>{
             nativeQuery = true
     )
     fun insertJob(name: String, jobType: String, status: String, parameters: String)
+
+
+    override fun findById(id : Long): Optional<JobEntity>
 
 }

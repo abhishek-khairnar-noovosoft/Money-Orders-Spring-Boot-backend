@@ -1,24 +1,17 @@
 package com.example.moneyorders.services
 
-import com.example.moneyorders.entities.JobEntity
-import com.example.moneyorders.interfaces.JobHandler
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import com.example.moneyorders.interfaces.PrintJobHandler
+import com.example.moneyorders.repositories.JobRepository
 
 @Service
 class HandlerService @Autowired constructor(
-        private val printJobHandler: PrintJobHandler,
-        private val transactionService: TransactionService
+        private val jobRepository: JobRepository
 ){
-
-    private val handlers: Map<String, JobHandler> = mapOf(
-            "PRINT" to printJobHandler
-    )
-
-    fun getHandler(jobType: String): JobHandler? {
-        return handlers[jobType]
+    fun process(id : Long){
+        var job = jobRepository.findById(id)
+        job.get().status = "completed"
+        jobRepository.save(job.get())
+        println(jobRepository.findById(id))
     }
-
-
 }

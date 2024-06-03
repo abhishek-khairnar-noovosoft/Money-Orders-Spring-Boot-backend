@@ -1,8 +1,10 @@
 package com.example.moneyorders.models
 
 import java.math.BigInteger
+import javax.swing.text.View
 
 class TransactionsViewModel {
+
     data class DepositViewModel(
             val depositTo: Long,
             val transactionAmount: BigInteger
@@ -22,4 +24,5 @@ class TransactionsViewModel {
             val withdrawFrom: Long,
             val transactionAmount: BigInteger
     )
+
 }

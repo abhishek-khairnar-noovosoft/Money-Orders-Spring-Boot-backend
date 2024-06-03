@@ -7,8 +7,6 @@ import com.example.moneyorders.repositories.TransactionRepository
 import com.example.moneyorders.entities.Transaction
 import com.example.moneyorders.entities.UserEntity
 import com.example.moneyorders.exceptions.CustomExceptions.*
-import com.example.moneyorders.interfaces.JobHandler
-import com.example.moneyorders.repositories.JobRepository
 import com.example.moneyorders.repositories.UserRepository
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
@@ -21,15 +19,7 @@ import java.time.LocalDate
 class TransactionService(
         val transactionRepository: TransactionRepository,
         val userRepository: UserRepository,
-        val jobRepository: JobRepository
 ) {
-//    class PrintJob() : JobHandler {
-//        override fun execute() {
-//            println("ye lo ho gaya")
-//        }
-//    }
-
-
     fun getAllUsers(): Iterable<UserEntity> {
         return userRepository.findAll()
     }

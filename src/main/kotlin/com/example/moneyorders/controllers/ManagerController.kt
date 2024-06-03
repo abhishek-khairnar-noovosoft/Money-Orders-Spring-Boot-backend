@@ -3,6 +3,7 @@ package com.example.moneyorders.controllers
 import com.example.moneyorders.entities.JobEntity
 import com.example.moneyorders.entities.Transaction
 import com.example.moneyorders.entities.UserEntity
+import com.example.moneyorders.models.TransactionsViewModel
 import com.example.moneyorders.models.TransactionsViewModel.DepositViewModel
 import com.example.moneyorders.models.TransactionsViewModel.WithdrawViewModel
 import com.example.moneyorders.models.TransactionsViewModel.TransferViewModel
@@ -22,15 +23,9 @@ class ManagerController @Autowired constructor(
         private val jobService: JobService
 ) {
 
+
     @GetMapping("/")
     fun home(): String {
-        val job = JobEntity(
-                name = "Sample Job",
-                jobType = "PRINT",
-                status = "processing",
-                parameters = mapOf("key1" to "value1", "key2" to "value2")
-        )
-        jobService.saveJob(job)
         return "hello"
     }
 
