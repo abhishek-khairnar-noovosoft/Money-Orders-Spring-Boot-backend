@@ -7,12 +7,28 @@ import com.example.moneyorders.api.jobs.repository.JobRepository
 
 @Service
 class HandlerService @Autowired constructor(
-        private val jobRepository: JobRepository
+        private val jobRepository: JobRepository,
+        private val transactionService: TransactionService
 ){
     fun process(id : Long){
-        var job = jobRepository.findById(id)
-        job.get().status = Status.SUCCESS
-        job.get().type
+        val job = jobRepository.findById(id)
+        val type = job.get().type
+
+        when(type){
+            "DEPOSIT"->{
+                job.get().status = Status.PROCESSING
+                jobRepository.save(job.get())
+                transactionService.depositProcessing(id)
+                job.get().status = Status.SUCCESS
+                jobRepository.save(job.get())
+            }
+            "WITHDRAW"->{
+                println("withdraw")
+            }
+            "TRANSFER"->{
+                println("transfer")
+            }
+        }
 
 
         jobRepository.save(job.get())

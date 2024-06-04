@@ -15,11 +15,4 @@ class JobService @Autowired constructor(
         return jobRepository.findJobsToExecute(noOfJobsRequired)
     }
 
-    fun updateStatusByJobId(id : Long,status : Status){
-        val data = jobRepository.findById(id)
-        val job = data.get()
-        job.status = status
-        jobRepository.save(job)
-    }
-
 }

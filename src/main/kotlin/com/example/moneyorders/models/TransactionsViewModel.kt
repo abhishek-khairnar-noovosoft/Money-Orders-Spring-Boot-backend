@@ -11,7 +11,7 @@ class TransactionsViewModel {
     )
     data class TransferViewModel(
             val withdrawFrom: Long,
-            val depositTo : Long,
+            val depositedTo : Long,
             val transactionAmount : BigInteger
     )
 

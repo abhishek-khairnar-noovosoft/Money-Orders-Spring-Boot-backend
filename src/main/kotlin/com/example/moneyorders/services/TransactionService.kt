@@ -1,13 +1,10 @@
 package com.example.moneyorders.services
 
-import com.example.moneyorders.models.TransactionsViewModel.DepositViewModel
-import com.example.moneyorders.models.TransactionsViewModel.WithdrawViewModel
 import com.example.moneyorders.models.TransactionsViewModel.TransferViewModel
 import com.example.moneyorders.repositories.TransactionRepository
 import com.example.moneyorders.entities.Transaction
 import com.example.moneyorders.entities.UserEntity
 import com.example.moneyorders.exceptions.CustomExceptions.*
-import com.example.moneyorders.api.jobs.repository.JobRepository
 import com.example.moneyorders.repositories.UserRepository
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
@@ -19,8 +16,7 @@ import java.time.LocalDate
 @Service
 class TransactionService(
         val transactionRepository: TransactionRepository,
-        val userRepository: UserRepository,
-        val jobRepository: JobRepository
+        val userRepository: UserRepository
 ) {
     fun getAllUsers(): Iterable<UserEntity> {
         return userRepository.findAll()
@@ -30,56 +26,10 @@ class TransactionService(
         return transactionRepository.findAll()
     }
 
-    fun deposit(transaction: DepositViewModel): Transaction {
-
-        if (transaction.transactionAmount <= BigInteger.ZERO)
-            throw InvalidAmountException("transaction amount cannot be less than or equal to zero")
-
-        val depositTo = transaction.depositTo
-        val transactionAmount = transaction.transactionAmount
-        val transactionModel = Transaction(
-                depositedTo = depositTo,
-                transactionAmount = transactionAmount,
-                withdrawFrom = null,
-                transactionType = "deposit",
-                createdAt = Timestamp(System.currentTimeMillis()),
-                status = "processing",
-                date = LocalDate.now()
-        )
-
-        transactionRepository.save(transactionModel)
-
-
-
-        return transactionModel
-    }
-
-    fun withdraw(transaction: WithdrawViewModel): Transaction {
-        if (transaction.transactionAmount <= BigInteger.ZERO)
-            throw InvalidAmountException("transaction amount cannot be less than or equal to zero")
-
-
-        val withdrawFrom = transaction.withdrawFrom
-        val transactionAmount = transaction.transactionAmount
-        val transactionModel = Transaction(
-                depositedTo = null,
-                transactionAmount = transactionAmount,
-                withdrawFrom = withdrawFrom,
-                transactionType = "withdraw",
-                createdAt = Timestamp(System.currentTimeMillis()),
-                status = "processing",
-                date = LocalDate.now()
-        )
-
-        transactionRepository.save(transactionModel)
-        return transactionModel
-    }
-
     fun transfer(transaction: TransferViewModel): Transaction {
         if (transaction.transactionAmount <= BigInteger.ZERO)
             throw InvalidAmountException("transaction amount cannot be less than or equal to zero")
-
-        val depositTo = transaction.depositTo
+        val depositTo = transaction.depositedTo
         val withdrawFrom = transaction.withdrawFrom
         val transactionAmount = transaction.transactionAmount
         val transactionModel = Transaction(
@@ -91,13 +41,21 @@ class TransactionService(
                 status = "processing",
                 date = LocalDate.now()
         )
-
         transactionRepository.save(transactionModel)
         return transactionModel
     }
 
     fun getLatestProcessingTransactions(limit: Int): List<Transaction> {
         return transactionRepository.getNoOfRequiredTransactionsToProcess(limit)
+    }
+
+    fun depositProcessing(id : Long){
+        val transaction = transactionRepository.findById(id)
+        val user = userRepository.findById(transaction.depositedTo)
+        user.balance += transaction.transactionAmount
+        userRepository.save(user)
+        transaction.status = "SUCCESS"
+        transactionRepository.save(transaction)
     }
 
     @Transactional
@@ -155,7 +113,6 @@ class TransactionService(
     }
 
     fun getUserSpecificTransactions(id: Long): List<Transaction> {
-        println(transactionRepository.findAllByWithdrawFromOrDepositedTo(id, id))
         return transactionRepository.findAllByWithdrawFromOrDepositedTo(id, id)
     }
 }

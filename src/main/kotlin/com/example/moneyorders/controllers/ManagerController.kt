@@ -2,8 +2,6 @@ package com.example.moneyorders.controllers
 
 import com.example.moneyorders.entities.Transaction
 import com.example.moneyorders.entities.UserEntity
-import com.example.moneyorders.models.TransactionsViewModel.DepositViewModel
-import com.example.moneyorders.models.TransactionsViewModel.WithdrawViewModel
 import com.example.moneyorders.models.TransactionsViewModel.TransferViewModel
 import com.example.moneyorders.services.TransactionService
 import org.springframework.beans.factory.annotation.Autowired
@@ -38,10 +36,10 @@ class ManagerController @Autowired constructor(
 //        return ResponseEntity.ok().body(transactionService.deposit(transaction))
 //    }
 
-    @PostMapping("/withdraw")
-    fun withdrawTransaction(@RequestBody transaction: WithdrawViewModel): ResponseEntity<Transaction> {
-        return ResponseEntity.ok().body(transactionService.withdraw(transaction))
-    }
+//    @PostMapping("/withdraw")
+//    fun withdrawTransaction(@RequestBody transaction: WithdrawViewModel): ResponseEntity<Transaction> {
+//        return ResponseEntity.ok().body(transactionService.withdraw(transaction))
+//    }
 
     @PostMapping("/transfer")
     fun transferTransaction(@RequestBody transaction: TransferViewModel): ResponseEntity<Transaction> {

@@ -19,7 +19,6 @@ class CustomDepositController(
             @RequestBody customDepositJobViewModel: CustomDepositJobViewModel
     ) : ResponseEntity<Any?>{
         customDepositService.createCustomDepositJob(customDepositJobViewModel)
-        println("success")
-        return ResponseEntity.ok().body(null)
+        return ResponseEntity.ok().body("deposit successful!!")
     }
 }
