@@ -1,6 +1,6 @@
 package com.example.moneyorders.services
 
-import com.example.moneyorders.repositories.JobRepository
+import com.example.moneyorders.api.jobs.service.JobService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service

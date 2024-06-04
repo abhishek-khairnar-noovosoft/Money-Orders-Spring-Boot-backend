@@ -21,7 +21,7 @@ data class Transaction(
         @Column(name = "transaction_amount")
         val transactionAmount: BigInteger = BigInteger.ZERO,
 
-        @Column(name = "transaction_type",)
+        @Column(name = "transaction_type")
         val transactionType: String = "",
 
         @Column(name = "created_at")
