@@ -1,8 +1,8 @@
-package com.example.moneyorders.api.withdraw.viewmodel
+package com.example.moneyorders.api.transactions.viewmodel
 
 import java.math.BigInteger
 
-data class CustomWithdrawViewModel(
+data class WithdrawViewModel(
         val withdrawFrom : Long,
         val transactionAmount : BigInteger
 )

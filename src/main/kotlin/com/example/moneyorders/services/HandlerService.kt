@@ -11,27 +11,39 @@ class HandlerService @Autowired constructor(
         private val transactionService: TransactionService
 ){
     fun process(id : Long){
-        val job = jobRepository.findById(id)
-        val type = job.get().type
+        val data = jobRepository.findById(id)
+        val type = data.get().type
+        val job = data.get()
 
         when(type){
             "DEPOSIT"->{
-                job.get().status = Status.PROCESSING
-                jobRepository.save(job.get())
-                transactionService.depositProcessing(id)
-                job.get().status = Status.SUCCESS
-                jobRepository.save(job.get())
+                println("DEPOSIT")
+//                job.status = Status.PROCESSING
+//                jobRepository.save(job)
+//                transactionService.processTransaction(id)
+//                job.status = Status.SUCCESS
+//                jobRepository.save(job)
             }
             "WITHDRAW"->{
-                println("withdraw")
+                println("WITHDRAW")
+//                job.status = Status.PROCESSING
+//                jobRepository.save(job)
+//                transactionService.processTransaction(id)
+//                job.status = Status.SUCCESS
+//                jobRepository.save(job)
             }
             "TRANSFER"->{
-                println("transfer")
+                println("TRANSFER")
+//                job.status = Status.PROCESSING
+//                jobRepository.save(job)
+//                transactionService.processTransaction(id)
+//                job.status = Status.SUCCESS
+//                jobRepository.save(job)
+            }
+            else->{
+//                job.status = Status.FAILED
+//                jobRepository.save(job)
             }
         }
-
-
-        jobRepository.save(job.get())
-        println(jobRepository.findById(id))
     }
 }

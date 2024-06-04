@@ -1,17 +1,11 @@
 package com.example.moneyorders.services
 
-import com.example.moneyorders.models.TransactionsViewModel.TransferViewModel
 import com.example.moneyorders.repositories.TransactionRepository
 import com.example.moneyorders.entities.Transaction
 import com.example.moneyorders.entities.UserEntity
-import com.example.moneyorders.exceptions.CustomExceptions.*
 import com.example.moneyorders.repositories.UserRepository
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
-import java.math.BigInteger
-import java.sql.Timestamp
-import java.time.LocalDate
-
 
 @Service
 class TransactionService(
@@ -26,74 +20,45 @@ class TransactionService(
         return transactionRepository.findAll()
     }
 
-    fun transfer(transaction: TransferViewModel): Transaction {
-        if (transaction.transactionAmount <= BigInteger.ZERO)
-            throw InvalidAmountException("transaction amount cannot be less than or equal to zero")
-        val depositTo = transaction.depositedTo
-        val withdrawFrom = transaction.withdrawFrom
-        val transactionAmount = transaction.transactionAmount
-        val transactionModel = Transaction(
-                depositedTo = depositTo,
-                transactionAmount = transactionAmount,
-                withdrawFrom = withdrawFrom,
-                transactionType = "transfer",
-                createdAt = Timestamp(System.currentTimeMillis()),
-                status = "processing",
-                date = LocalDate.now()
-        )
-        transactionRepository.save(transactionModel)
-        return transactionModel
-    }
 
-    fun getLatestProcessingTransactions(limit: Int): List<Transaction> {
-        return transactionRepository.getNoOfRequiredTransactionsToProcess(limit)
-    }
-
-    fun depositProcessing(id : Long){
-        val transaction = transactionRepository.findById(id)
-        val user = userRepository.findById(transaction.depositedTo)
-        user.balance += transaction.transactionAmount
-        userRepository.save(user)
-        transaction.status = "SUCCESS"
-        transactionRepository.save(transaction)
-    }
 
     @Transactional
     fun processTransaction(id: Long) {
-        println("processing $id")
+//        println("processing $id")
         val transaction = transactionRepository.findById(id)
         when (transaction.transactionType) {
-            "deposit" -> {
-                val user = userRepository.findById(transaction.depositedTo)
+            "DEPOSIT" -> {
+                val user = userRepository.findById(transaction.depositTo)
                 user.balance += transaction.transactionAmount
                 userRepository.save(user)
-                transaction.status = "success"
+                transaction.status = "SUCCESS"
                 transactionRepository.save(transaction)
             }
 
-            "withdraw" -> {
+            "WITHDRAW" -> {
+                println("HEllO")
                 val user = userRepository.findById(transaction.withdrawFrom)
                 if (user.balance < transaction.transactionAmount) {
-                    transaction.status = "failed"
+                    transaction.status = "FAILED"
                     transactionRepository.save(transaction)
                     throw IllegalArgumentException("insufficient balance")
                 }
                 user.balance -= transaction.transactionAmount
-                transaction.status = "success"
+                transaction.status = "SUCCESS"
                 transactionRepository.save(transaction)
                 userRepository.save(user)
             }
 
-            "transfer" -> {
+            "TRANSFER" -> {
                 val sender = userRepository.findById(transaction.withdrawFrom)
-                val receiver = userRepository.findById(transaction.depositedTo)
+                val receiver = userRepository.findById(transaction.depositTo)
                 if (sender.balance < transaction.transactionAmount) {
-                    transaction.status = "failed"
+                    transaction.status = "FAILED"
                     transactionRepository.save(transaction)
                     throw IllegalArgumentException("insufficient balance")
                 }
-                if (transaction.withdrawFrom == transaction.depositedTo) {
-                    transaction.status = "failed"
+                if (transaction.withdrawFrom == transaction.depositTo) {
+                    transaction.status = "FAILED"
                     transactionRepository.save(transaction)
                     throw IllegalArgumentException("sender and receiver cannot be same")
                 }
@@ -105,7 +70,7 @@ class TransactionService(
             }
 
             else -> {
-                transaction.status = "failed"
+                transaction.status = "FAILED"
                 transactionRepository.save(transaction)
             }
 
@@ -113,6 +78,6 @@ class TransactionService(
     }
 
     fun getUserSpecificTransactions(id: Long): List<Transaction> {
-        return transactionRepository.findAllByWithdrawFromOrDepositedTo(id, id)
+        return transactionRepository.findAllByWithdrawFromOrDepositTo(id, id)
     }
 }

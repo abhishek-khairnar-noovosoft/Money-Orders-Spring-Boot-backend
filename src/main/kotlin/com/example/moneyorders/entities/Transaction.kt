@@ -16,7 +16,7 @@ data class Transaction(
         val withdrawFrom: Long? = null,
 
         @Column(name = "deposited_to")
-        val depositedTo: Long? = null,
+        val depositTo: Long? = null,
 
         @Column(name = "transaction_amount")
         val transactionAmount: BigInteger = BigInteger.ZERO,

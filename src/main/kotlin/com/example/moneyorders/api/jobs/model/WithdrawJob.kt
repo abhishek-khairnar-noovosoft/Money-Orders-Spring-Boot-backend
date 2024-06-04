@@ -9,19 +9,19 @@ import java.io.Serializable
 import java.math.BigInteger
 
 @Entity
-@DiscriminatorValue("DEPOSIT")
-class CustomDepositJob : Job() {
+@DiscriminatorValue("WITHDRAW")
+class WithdrawJob : Job() {
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "data", nullable = false, columnDefinition = "jsonb")
-    lateinit var customDepositJobData : CustomDepositJobData
-    fun withData(customDepositJobData: CustomDepositJobData){
-        this.type = JobType.DEPOSIT.toString()
+    lateinit var withdrawJobData : WithdrawJobData
+    fun withData(withdrawJobData: WithdrawJobData){
+        this.type = JobType.WITHDRAW.toString()
         this.status = Status.PENDING
-        this.customDepositJobData = customDepositJobData
+        this.withdrawJobData = withdrawJobData
     }
 }
 
-data class CustomDepositJobData(
-        val depositTo : Long,
+data class WithdrawJobData(
+        val withdrawFrom : Long,
         val transactionAmount : BigInteger
 ) : Serializable

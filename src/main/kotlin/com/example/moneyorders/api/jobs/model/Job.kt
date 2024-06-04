@@ -11,8 +11,7 @@ import java.time.LocalDateTime
 enum class JobType {
     DEPOSIT,
     WITHDRAW,
-    TRANSFER,
-    PRINT
+    TRANSFER
 }
 
 enum class Status {

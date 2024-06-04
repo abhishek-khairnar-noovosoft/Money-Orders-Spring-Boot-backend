@@ -8,13 +8,13 @@ import java.time.LocalDateTime
 
 interface TransactionRepository : JpaRepository<Transaction, Int> {
     @Query("""
-        SELECT * FROM transactions t WHERE t.status = 'processing' LIMIT :limit
+        SELECT * FROM transactions t WHERE t.status = 'PENDING' LIMIT :limit
     """, nativeQuery = true)
     fun getNoOfRequiredTransactionsToProcess(limit : Int) : List<Transaction>
 
     fun findById(id : Long): Transaction
 
-    fun findAllByWithdrawFromOrDepositedTo(withdrawFrom: Long, depositedTo: Long) : List<Transaction>
+    fun findAllByWithdrawFromOrDepositTo(withdrawFrom: Long, depositTo: Long) : List<Transaction>
 
 
 }

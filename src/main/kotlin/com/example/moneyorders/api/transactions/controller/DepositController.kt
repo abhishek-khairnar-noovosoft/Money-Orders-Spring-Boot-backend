@@ -1,7 +1,7 @@
-package com.example.moneyorders.api.deposit.controller
+package com.example.moneyorders.api.transactions.controller
 
-import com.example.moneyorders.api.deposit.services.CustomDepositService
-import com.example.moneyorders.api.deposit.viewmodel.CustomDepositJobViewModel
+import com.example.moneyorders.api.transactions.services.DepositService
+import com.example.moneyorders.api.transactions.viewmodel.DepositJobViewModel
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/deposit")
-class CustomDepositController(
-        val customDepositService: CustomDepositService
+class DepositController(
+        val depositService: DepositService
 ) {
     @PostMapping
     fun deposit(
-            @RequestBody customDepositJobViewModel: CustomDepositJobViewModel
+            @RequestBody depositJobViewModel: DepositJobViewModel
     ) : ResponseEntity<Any?>{
-        customDepositService.createCustomDepositJob(customDepositJobViewModel)
+        depositService.createCustomDepositJob(depositJobViewModel)
         return ResponseEntity.ok().body("deposit successful!!")
     }
 }
