@@ -47,7 +47,7 @@ abstract class Job {
     open var createdAt : LocalDateTime = LocalDateTime.now()
 
     @Column( nullable = true, columnDefinition = "text")
-    open var failureReason : String? = null
+    open var transactionId : Long? = null
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(insertable=false, updatable=false,nullable = false, columnDefinition = "jsonb")

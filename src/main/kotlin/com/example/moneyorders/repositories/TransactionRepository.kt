@@ -12,7 +12,7 @@ interface TransactionRepository : JpaRepository<Transaction, Int> {
     """, nativeQuery = true)
     fun getNoOfRequiredTransactionsToProcess(limit : Int) : List<Transaction>
 
-    fun findById(id : Long): Transaction
+    fun findById(id : Long?): Transaction
 
     fun findAllByWithdrawFromOrDepositTo(withdrawFrom: Long, depositTo: Long) : List<Transaction>
 

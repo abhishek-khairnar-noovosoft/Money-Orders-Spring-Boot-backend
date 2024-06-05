@@ -1,8 +1,9 @@
 package com.example.moneyorders.api.transactions.services
 
-import com.example.moneyorders.api.jobs.model.*
+import com.example.moneyorders.api.jobs.model.WithdrawJob
+import com.example.moneyorders.api.jobs.model.WithdrawJobData
 import com.example.moneyorders.api.jobs.repository.WithdrawRepository
-import com.example.moneyorders.api.transactions.viewmodel.WithdrawViewModel
+import com.example.moneyorders.api.transactions.viewmodel.WithdrawJobViewModel
 import com.example.moneyorders.entities.Transaction
 import com.example.moneyorders.exceptions.CustomExceptions
 import com.example.moneyorders.repositories.TransactionRepository
@@ -14,13 +15,12 @@ import java.time.LocalDate
 
 @Service
 class WithdrawService(
-        private val transactionRepository: TransactionRepository,
-        private val withdrawRepository: WithdrawRepository
+        val transactionRepository: TransactionRepository,
+        val withdrawRepository: WithdrawRepository
 ) {
-
     @Transactional
     fun createWithdrawJob(
-            withdrawViewModel: WithdrawViewModel
+            withdrawViewModel: WithdrawJobViewModel
     ){
         val withdrawJob = WithdrawJob()
         withdrawJob.withData(
@@ -29,12 +29,13 @@ class WithdrawService(
                         transactionAmount = withdrawViewModel.transactionAmount
                 )
         )
-
-        withdraw(withdrawViewModel)
+        val transaction = withdraw(withdrawViewModel)
+        withdrawJob.transactionId = transaction.id
         withdrawRepository.save(withdrawJob)
     }
 
-    fun withdraw(transaction: WithdrawViewModel) : Transaction{
+    fun withdraw(transaction: WithdrawJobViewModel): Transaction {
+
         if (transaction.transactionAmount <= BigInteger.ZERO)
             throw CustomExceptions.InvalidAmountException("transaction amount cannot be less than or equal to zero")
 

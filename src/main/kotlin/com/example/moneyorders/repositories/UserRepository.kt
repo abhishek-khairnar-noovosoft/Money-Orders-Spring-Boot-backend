@@ -12,6 +12,4 @@ interface UserRepository : JpaRepository<UserEntity, Int> {
     fun findByEmail(email :String): UserEntity?
 
 
-
-
 }

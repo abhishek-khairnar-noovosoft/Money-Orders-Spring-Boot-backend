@@ -10,7 +10,7 @@ import java.util.*
 @Repository
 interface JobRepository : JpaRepository<Job,Long>{
     @Query("""
-        SELECT * FROM job WHERE status = 'PENDING' LIMIT :noOfJobs
+        SELECT * FROM job WHERE status = 'PENDING' OR status = 'PROCESSING' LIMIT :noOfJobs
     """, nativeQuery = true)
     fun findJobsToExecute(noOfJobs : Int): List<Job>
 

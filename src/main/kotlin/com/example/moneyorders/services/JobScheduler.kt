@@ -1,5 +1,6 @@
 package com.example.moneyorders.services
 
+import com.example.moneyorders.api.jobs.model.Job
 import com.example.moneyorders.api.jobs.service.JobService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Scheduled
@@ -19,16 +20,19 @@ class JobScheduler @Autowired constructor(
 
     @Scheduled(fixedRate = 10000)
     fun scheduler() {
-        println("jobQueue $jobQueue")
         val noOfRequiredJobs = 10 - jobQueue.size
         val jobs = jobService.getJobsToExecute(noOfRequiredJobs)
 
-        for (job in jobs)
-            jobQueue.offer(job.id)
 
+        for (job in jobs) {
+            jobQueue.offer(job.id)
+        }
+
+        println("jobQueue $jobQueue")
         while (jobQueue.isNotEmpty()) {
             val id = jobQueue.poll()
             scheduler.submit {
+                println("working till now")
                 handlerService.process(id)
             }
         }

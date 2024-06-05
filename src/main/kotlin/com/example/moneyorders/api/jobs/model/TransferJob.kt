@@ -14,6 +14,7 @@ class TransferJob : Job() {
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "data", nullable = false, columnDefinition = "jsonb")
     lateinit var transferJobData : TransferJobData
+
     fun withData(transferJobData: TransferJobData){
         this.type = JobType.TRANSFER.toString()
         this.status = Status.PENDING
@@ -22,7 +23,7 @@ class TransferJob : Job() {
 }
 
 data class TransferJobData(
-        val depositTo : Long,
         val withdrawFrom : Long,
+        val depositTo : Long,
         val transactionAmount : BigInteger
-) : Serializable
+)

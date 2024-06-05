@@ -2,8 +2,7 @@ package com.example.moneyorders.api.transactions.viewmodel
 
 import java.math.BigInteger
 
-data class TransferViewModel(
+data class WithdrawJobViewModel(
         val withdrawFrom : Long,
-        val depositTo : Long,
         val transactionAmount : BigInteger
 )

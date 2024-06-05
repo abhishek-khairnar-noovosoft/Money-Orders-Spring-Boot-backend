@@ -14,6 +14,7 @@ class DepositJob : Job() {
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "data", nullable = false, columnDefinition = "jsonb")
     lateinit var customDepositJobData : CustomDepositJobData
+
     fun withData(customDepositJobData: CustomDepositJobData){
         this.type = JobType.DEPOSIT.toString()
         this.status = Status.PENDING
@@ -24,4 +25,4 @@ class DepositJob : Job() {
 data class CustomDepositJobData(
         val depositTo : Long,
         val transactionAmount : BigInteger
-) : Serializable
+)

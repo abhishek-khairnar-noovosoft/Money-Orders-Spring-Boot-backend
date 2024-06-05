@@ -14,6 +14,7 @@ class WithdrawJob : Job() {
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "data", nullable = false, columnDefinition = "jsonb")
     lateinit var withdrawJobData : WithdrawJobData
+
     fun withData(withdrawJobData: WithdrawJobData){
         this.type = JobType.WITHDRAW.toString()
         this.status = Status.PENDING
@@ -24,4 +25,4 @@ class WithdrawJob : Job() {
 data class WithdrawJobData(
         val withdrawFrom : Long,
         val transactionAmount : BigInteger
-) : Serializable
+)

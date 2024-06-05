@@ -23,8 +23,7 @@ class TransactionService(
 
 
     @Transactional
-    fun processTransaction(id: Long) {
-//        println("processing $id")
+    fun processTransaction(id: Long?) {
         val transaction = transactionRepository.findById(id)
         when (transaction.transactionType) {
             "DEPOSIT" -> {
@@ -36,7 +35,6 @@ class TransactionService(
             }
 
             "WITHDRAW" -> {
-                println("HEllO")
                 val user = userRepository.findById(transaction.withdrawFrom)
                 if (user.balance < transaction.transactionAmount) {
                     transaction.status = "FAILED"

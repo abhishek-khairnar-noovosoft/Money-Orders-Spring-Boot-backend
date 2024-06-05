@@ -29,8 +29,8 @@ class DepositService(
                         transactionAmount = depositViewModel.transactionAmount
                 )
         )
-
-        deposit(depositViewModel)
+        val transaction = deposit(depositViewModel)
+        depositJob.transactionId = transaction.id
         depositRepository.save(depositJob)
     }
 
