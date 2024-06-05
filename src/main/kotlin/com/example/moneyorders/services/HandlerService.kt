@@ -5,7 +5,6 @@ import com.example.moneyorders.api.jobs.repository.DepositRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import com.example.moneyorders.api.jobs.repository.JobRepository
-import com.example.moneyorders.api.jobs.repository.TransferRepository
 import com.example.moneyorders.api.jobs.repository.WithdrawRepository
 
 @Service
@@ -14,7 +13,6 @@ class HandlerService @Autowired constructor(
         private val transactionService: TransactionService,
         private val depositJobRepository: DepositRepository,
         private val withdrawRepository: WithdrawRepository,
-        private val transferRepository: TransferRepository
 ){
     fun process(id : Long){
         val data = jobRepository.findById(id)
@@ -31,8 +29,8 @@ class HandlerService @Autowired constructor(
                 withdrawRepository.updateStatusByJobId(job.id,Status.SUCCESS.toString())
             }
             "TRANSFER"->{
-                transactionService.processTransaction(job.transactionId)
-                transferRepository.updateStatusByJobId(job.id,Status.SUCCESS.toString())
+//                transactionService.processTransaction(job.transactionId)
+//                transferRepository.updateStatusByJobId(job.id,Status.SUCCESS.toString())
             }
             else->{
                 job.status = Status.FAILED

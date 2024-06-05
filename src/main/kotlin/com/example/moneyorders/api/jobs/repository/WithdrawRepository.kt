@@ -1,6 +1,5 @@
 package com.example.moneyorders.api.jobs.repository
 
-import com.example.moneyorders.api.jobs.model.DepositJob
 import com.example.moneyorders.api.jobs.model.WithdrawJob
 import jakarta.transaction.Transactional
 import org.springframework.data.jpa.repository.JpaRepository
@@ -15,7 +14,5 @@ interface WithdrawRepository : JpaRepository<WithdrawJob,Long>{
               UPDATE job SET status = :status WHERE id = :id  
             """
             , nativeQuery = true)
-
-
     fun updateStatusByJobId(id : Long,status : String)
 }

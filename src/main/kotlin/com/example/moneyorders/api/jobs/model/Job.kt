@@ -49,6 +49,9 @@ abstract class Job {
     @Column( nullable = true, columnDefinition = "text")
     open var transactionId : Long? = null
 
+    @Column( nullable = true, columnDefinition = "text")
+    open var failureReason : String? = null
+
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(insertable=false, updatable=false,nullable = false, columnDefinition = "jsonb")
     open var data : Any? = null

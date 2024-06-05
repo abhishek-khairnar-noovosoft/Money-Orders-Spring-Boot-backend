@@ -5,7 +5,6 @@ import jakarta.persistence.DiscriminatorValue
 import jakarta.persistence.Entity
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
-import java.io.Serializable
 import java.math.BigInteger
 
 @Entity
