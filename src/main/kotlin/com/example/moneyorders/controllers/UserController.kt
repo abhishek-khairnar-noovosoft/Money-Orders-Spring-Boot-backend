@@ -3,7 +3,7 @@ package com.example.moneyorders.controllers
 
 import com.example.moneyorders.entities.Transaction
 import com.example.moneyorders.services.JwtService
-import com.example.moneyorders.services.TransactionService
+import com.example.moneyorders.api.transactions.services.TransactionService
 import com.example.moneyorders.services.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity

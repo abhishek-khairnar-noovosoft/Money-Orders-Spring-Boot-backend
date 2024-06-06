@@ -6,13 +6,4 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 
-interface DepositRepository : JpaRepository<DepositJob,Long>{
-    @Transactional
-    @Modifying
-    @Query(
-            """
-              UPDATE job SET status = :status WHERE id = :id  
-            """
-    , nativeQuery = true)
-    fun updateStatusByJobId(id : Long,status : String)
-}
+interface DepositRepository : JpaRepository<DepositJob,Long>

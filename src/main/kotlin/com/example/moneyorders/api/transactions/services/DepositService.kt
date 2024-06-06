@@ -21,7 +21,7 @@ class DepositService(
     @Transactional
     fun createCustomDepositJob(
             depositViewModel : DepositJobViewModel
-    ){
+    ) : Transaction {
         val depositJob = DepositJob()
         depositJob.withData(
                 CustomDepositJobData(
@@ -32,12 +32,10 @@ class DepositService(
         val transaction = deposit(depositViewModel)
         depositJob.transactionId = transaction.id
         depositRepository.save(depositJob)
+        return transaction
     }
 
     fun deposit(transaction: DepositJobViewModel): Transaction {
-
-        if (transaction.transactionAmount <= BigInteger.ZERO)
-            throw CustomExceptions.InvalidAmountException("transaction amount cannot be less than or equal to zero")
 
         val depositTo = transaction.depositTo
         val transactionAmount = transaction.transactionAmount

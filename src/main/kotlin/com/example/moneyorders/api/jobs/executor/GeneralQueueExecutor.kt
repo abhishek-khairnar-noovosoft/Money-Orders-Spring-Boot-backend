@@ -3,11 +3,14 @@ package com.example.moneyorders.api.jobs.executor
 import com.example.moneyorders.api.jobs.model.JobType
 import com.example.moneyorders.api.jobs.model.Status
 import com.example.moneyorders.api.jobs.queue.DepositQueue
+import com.example.moneyorders.api.jobs.queue.TransferQueue
 import com.example.moneyorders.api.jobs.queue.WithdrawQueue
 import com.example.moneyorders.api.jobs.repository.JobRepository
 import com.example.moneyorders.api.jobs.viewmodel.JobWithType
 import jakarta.annotation.PreDestroy
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import java.util.LinkedList
@@ -21,10 +24,9 @@ class GeneralQueueExecutor(
         val jobRepository: JobRepository,
         val depositQueue: DepositQueue,
         val withdrawQueue : WithdrawQueue,
+        val transferQueue : TransferQueue,
         @Value("3")
         private val noOfThreads: Int,
-        @Value("10")
-        private val queueSize: Int
 ) {
     private val scheduledExecutor: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
     private val executor = Executors.newFixedThreadPool(noOfThreads)
@@ -46,9 +48,12 @@ class GeneralQueueExecutor(
 
     fun fetchJobs() {
         if (queue.isEmpty()) {
-            fill()
+            try{
+                fill()
+            }catch (e : Exception){
+                println("something went wrong")
+            }
         }
-
         while (queue.isNotEmpty()) {
             val job = queue.poll()
             execute(job)
@@ -57,7 +62,7 @@ class GeneralQueueExecutor(
 
     private fun fill() {
         val noOfJobsRequired = 10 - queue.size
-        val jobs = jobRepository.findJobsToExecute(noOfJobsRequired)
+        val jobs = jobRepository.findJobsToExecute(noOfJobsRequired, Pageable.ofSize(noOfJobsRequired))
         queue.addAll(
                 jobs.map {
                     JobWithType(
@@ -78,6 +83,7 @@ class GeneralQueueExecutor(
             when (jobWithType.job.type) {
                 JobType.DEPOSIT.toString() -> depositQueue.execute(jobWithType.job)
                 JobType.WITHDRAW.toString() -> withdrawQueue.execute(jobWithType.job)
+                JobType.TRANSFER.toString() -> transferQueue.execute(jobWithType.job)
             }
         }
     }

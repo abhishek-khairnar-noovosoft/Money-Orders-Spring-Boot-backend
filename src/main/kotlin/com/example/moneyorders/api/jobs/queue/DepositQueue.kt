@@ -31,8 +31,7 @@ class DepositQueue(
             transactionRepository.save(transaction)
 
             throw CustomExceptions.InvalidAmountException("Amount cannot be less than or equal to zero")
-        }
-        else{
+        }else{
             val user = userRepository.findById(transaction.depositTo)
             user.balance += transaction.transactionAmount
             userRepository.save(user)

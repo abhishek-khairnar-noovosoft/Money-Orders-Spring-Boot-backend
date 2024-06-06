@@ -13,8 +13,8 @@ class JobService @Autowired constructor(
 
 
 
-    fun getJobsToExecute(noOfJobsRequired : Int) : List<Job> {
-        return jobRepository.findJobsToExecute(noOfJobsRequired)
-    }
+//    fun getJobsToExecute(noOfJobsRequired : Int) : List<Job> {
+//        return jobRepository.findJobsToExecute(noOfJobsRequired)
+//    }
 
 }

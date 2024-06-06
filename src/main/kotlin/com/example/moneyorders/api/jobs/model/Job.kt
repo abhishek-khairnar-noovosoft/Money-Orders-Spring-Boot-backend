@@ -5,6 +5,7 @@ import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.annotations.Type
 import org.hibernate.type.SqlTypes
+import java.math.BigInteger
 import java.time.LocalDateTime
 
 
@@ -18,7 +19,6 @@ enum class Status {
     PENDING,
     FAILED,
     PROCESSING,
-    SUSPENDED,
     SUCCESS
 }
 data class JobDataViewModel(
@@ -30,7 +30,7 @@ data class JobDataViewModel(
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn( discriminatorType = DiscriminatorType.STRING)
-abstract class Job {
+open class Job {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     open val id : Long = 0
