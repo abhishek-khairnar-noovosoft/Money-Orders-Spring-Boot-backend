@@ -47,7 +47,6 @@ class GeneralQueueExecutor(
     fun fetchJobs() {
         if (queue.isEmpty()) {
             fill()
-            println("queue $queue")
         }
 
         while (queue.isNotEmpty()) {
@@ -57,8 +56,8 @@ class GeneralQueueExecutor(
     }
 
     private fun fill() {
-        val jobs = jobRepository.findFirst10ByStatusAndType(status = Status.PENDING, type = JobType.DEPOSIT.toString())
-
+        val noOfJobsRequired = 10 - queue.size
+        val jobs = jobRepository.findJobsToExecute(noOfJobsRequired)
         queue.addAll(
                 jobs.map {
                     JobWithType(

@@ -5,6 +5,7 @@ import com.example.moneyorders.api.jobs.model.Job
 import com.example.moneyorders.api.jobs.model.Status
 import com.example.moneyorders.api.jobs.repository.DepositRepository
 import com.example.moneyorders.api.jobs.repository.JobRepository
+import com.example.moneyorders.exceptions.CustomExceptions
 import com.example.moneyorders.repositories.TransactionRepository
 import com.example.moneyorders.repositories.UserRepository
 import org.springframework.stereotype.Component
@@ -23,18 +24,26 @@ class DepositQueue(
     override fun handle(job: Job) {
         job as DepositJob
 
-        val id:Long = job.data.toString().split(", ")[0].split(" ")[1].toLong()
-        val amount : BigInteger = job.data.toString().split(", ")[1].split(" ")[1].split("}")[0].toBigInteger()
-
-        val user = userRepository.findById(id)
-        user.balance += amount
-        userRepository.save(user)
-
         val transaction = transactionRepository.findById(job.transactionId)
-        transaction.status = "SUCCESS"
-        transactionRepository.save(transaction)
 
-        job.status = Status.SUCCESS
-        depositRepository.save(job)
+        if(transaction.transactionAmount <= BigInteger.ZERO){
+            transaction.status = Status.FAILED.toString()
+            transactionRepository.save(transaction)
+
+            throw CustomExceptions.InvalidAmountException("Amount cannot be less than or equal to zero")
+        }
+        else{
+            val user = userRepository.findById(transaction.depositTo)
+            user.balance += transaction.transactionAmount
+            userRepository.save(user)
+
+            transaction.status = "SUCCESS"
+            transactionRepository.save(transaction)
+
+            job.status = Status.SUCCESS
+            depositRepository.save(job)
+        }
+
+
     }
 }

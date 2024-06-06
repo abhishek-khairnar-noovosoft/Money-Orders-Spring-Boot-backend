@@ -18,34 +18,35 @@ class WithdrawQueue(
         val userRepository: UserRepository,
         val transactionRepository: TransactionRepository,
 
-) : QueueJob(
+        ) : QueueJob(
         jobRepository = jobRepository
-){
+) {
     override fun handle(job: Job) {
         job as WithdrawJob
 
-        val id:Long = job.data.toString().split(", ")[0].split(" ")[1].toLong()
-        val amount : BigInteger = job.data.toString().split(", ")[1].split(" ")[1].split("}")[0].toBigInteger()
-
-        val user = userRepository.findById(id)
         val transaction = transactionRepository.findById(job.transactionId)
+        val user = userRepository.findById(transaction.withdrawFrom)
 
-        if(transaction.transactionAmount <= BigInteger.ZERO){
+        if (transaction.transactionAmount <= BigInteger.ZERO) {
             throw CustomExceptions.InvalidAmountException("Amount cannot be less than zero")
         }
 
-        if(user.balance < transaction.transactionAmount){
+        if (user.balance < transaction.transactionAmount) {
+            transaction.status = Status.FAILED.toString()
+            transactionRepository.save(transaction)
             throw CustomExceptions.InvalidAmountException("insufficient balance")
         }
+        else {
+            user.balance -= transaction.transactionAmount
+            userRepository.save(user)
 
-        user.balance -= transaction.transactionAmount
-        userRepository.save(user)
+            transaction.status = "SUCCESS"
+            transactionRepository.save(transaction)
 
-        transaction.status = "SUCCESS"
-        transactionRepository.save(transaction)
+            job.status = Status.SUCCESS
+            withdrawRepository.save(job)
+        }
 
-        job.status = Status.SUCCESS
-        withdrawRepository.save(job)
     }
 
 }

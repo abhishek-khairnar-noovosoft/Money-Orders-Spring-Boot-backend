@@ -21,7 +21,7 @@ class WithdrawService(
     @Transactional
     fun createWithdrawJob(
             withdrawViewModel: WithdrawJobViewModel
-    ){
+    ) : Transaction {
         val withdrawJob = WithdrawJob()
         withdrawJob.withData(
                 WithdrawJobData(
@@ -32,6 +32,7 @@ class WithdrawService(
         val transaction = withdraw(withdrawViewModel)
         withdrawJob.transactionId = transaction.id
         withdrawRepository.save(withdrawJob)
+        return transaction
     }
 
     fun withdraw(transaction: WithdrawJobViewModel): Transaction {

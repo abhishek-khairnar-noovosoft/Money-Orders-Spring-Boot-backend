@@ -18,7 +18,7 @@ class WithdrawController(
     fun withdraw(
             @RequestBody withdrawJobViewModel: WithdrawJobViewModel
     ) : ResponseEntity<Any?>{
-        withdrawService.createWithdrawJob(withdrawJobViewModel)
-        return ResponseEntity.ok().body("withdraw successful!!")
+        val transaction = withdrawService.createWithdrawJob(withdrawJobViewModel)
+        return ResponseEntity.ok().body(transaction)
     }
 }
